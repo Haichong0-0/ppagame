@@ -21,6 +21,7 @@ public class Room
     private HashMap<String, Room> exits;        // stores exits of this room.
     private Chest chest;
     private Monster mons;
+    private double damageMod =2.5;
 
     /**
      * Create a room described "description". Initially, it has
@@ -33,6 +34,7 @@ public class Room
         this.description = description;
         exits = new HashMap<>();
         chest = new Chest();
+        mons = null;
 
     }
 
@@ -106,6 +108,42 @@ public class Room
 
     public void addMonster(String name,int attack,float sense){
         mons = new Monster(name,attack,sense);
+    }
+
+    public String getMons(){
+        if (mons == null){
+            return "-1";
+        }
+        else{return mons.getName();}
+    }
+    public void monEnter(Monster monst){
+        mons = monst;
+    }
+
+    public void monExit(){
+        mons = null;
+    }
+
+    public int fight(int pstat){
+        int attack  = mons.getAttack();
+        double temp = 0.5 + (pstat - attack)*0.05;
+        //probability of player fights well
+        if (temp>Math.random()){
+            return (int) Math.round(attack*damageMod*0.40);
+        }
+        else {
+            return (int) Math.round(attack * damageMod * 0.80);
+        }
+    }
+
+    public boolean stealthCheck(int pstat) {
+        double temp = 0.5 + (pstat - mons.getPerception()) * 0.05;
+        //probability of player not being discovered
+        return temp > Math.random();
+    }
+
+    public int monsAttack(){
+        return mons.getAttack();
     }
 
 }

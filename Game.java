@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -19,6 +21,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private int hp,fightLv,stealthLv;
         
     /**
      * Create the game and initialise its internal map.
@@ -27,6 +30,7 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        stealthLv = 5;
     }
 
     /**
@@ -55,6 +59,7 @@ public class Game
         rest.setExit("west",wind);
         rest.setExit("north",water1);
         rest.setExit("east",earth1);
+        rest.addMonster("boss1",10,10);
 
         wind.setExit("east",rest);
 
@@ -73,11 +78,6 @@ public class Game
         earth3.setExit("west",earth2);
 
         fire1.setExit("south",earth1);
-
-
-
-
-
 
 
 
@@ -142,6 +142,9 @@ public class Game
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
+        else if (commandWord.equals("fight")) {
+
+        }
         // else command not recognised.
         return wantToQuit;
     }
@@ -184,7 +187,16 @@ public class Game
         }
         else {
             currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            if (Objects.equals(nextRoom.getMons(), "-1")){ //if there is no monster
+                System.out.println(currentRoom.getLongDescription());
+            }
+            else{//if there is a monster
+                System.out.println("As you opened the door you see a "+ nextRoom.getMons()+" in front of you");
+                System.out.println("Now its up to you to decide to fight it or to sneak pass");
+                System.out.println("(You might fail to sneak pass)");
+                Command decision = parser.getCommand();
+                processDecision(decision);
+            }
         }
     }
 
@@ -201,6 +213,44 @@ public class Game
         }
         else {
             return true;  // signal that we want to quit
+        }
+    }
+
+    public void processDecision(Command command){
+        if (command.getCommandWord().equals("fight")){
+            int hplost = currentRoom.fight(fightLv);
+            hp = hp - hplost;
+            if (hp>0) {
+                System.out.println("You won the fight. You have lost " + hplost + " HP.");
+                System.out.println("Your current HP is " + hp);
+            }
+        }
+
+        else if (command.getCommandWord().equals("sneak")) {
+            if (currentRoom.stealthCheck(stealthLv)){
+                System.out.println("You have successfully sneak passed the monster");
+            }
+
+            else{
+                System.out.println("Oh no! The "+currentRoom.getMons()+" noticed you");
+                System.out.println("It is now attacking you");
+                hp = hp - currentRoom.monsAttack();
+                if (hp>0){
+                    System.out.println("You successfully defended yourself ");
+                    System.out.println("Your current HP is " + hp);
+                }
+                else {
+                    System.out.println("The monster is too strong for you. ");
+                    System.out.println("Your HP has dropped below 0");
+                }
+            }
+        }
+        else if (command.getCommandWord().equals("help")) {
+            System.out.println("You can now either choose to fight or sneak");
+        }
+        else{
+            Command decision = parser.getCommand();
+            processDecision(decision); //until the player enters a valid response
         }
     }
 }
