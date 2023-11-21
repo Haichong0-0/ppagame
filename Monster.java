@@ -11,5 +11,6 @@ public class Monster {
         attack = att;
         sense = sne;
     }
+    
 
 }
