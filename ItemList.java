@@ -14,7 +14,7 @@ public class ItemList {
 
     }
 
-    public boolean chechItem(String term){
+    public boolean checkItem(String term){
         return items.containsKey(term);
     }
 

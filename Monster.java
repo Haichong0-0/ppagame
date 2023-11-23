@@ -15,10 +15,6 @@ public class Monster {
         attack = att;
         perception = sne;
     }
-    
-
-
-
 
 
     public String getName(){ return name;}

@@ -23,7 +23,10 @@ public class Game
     private Room currentRoom;
     private int hp,fightLv,stealthLv;
     private ArrayList<String>  bacDirec;
-    private ArrayList<String> playerbag;
+    private ArrayList<String> inventory;
+    private ItemList itemList;
+    private int weightLimit;
+    private boolean canMove;
         
     /**
      * Create the game and initialise its internal map.
@@ -33,6 +36,11 @@ public class Game
         createRooms();
         parser = new Parser();
         stealthLv = 5;
+        inventory = new ArrayList<>();
+        bacDirec = new ArrayList<>();
+        itemList = new ItemList();
+        weightLimit = 50;
+        canMove = true;
     }
 
     /**
@@ -145,19 +153,27 @@ public class Game
         }
 
         String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
-            printHelp();
-        }
-        else if (commandWord.equals("go")) {
-            goRoom(command);
-        }
-        else if (commandWord.equals("quit")) {
-            wantToQuit = quit(command);
-        }
-        else if (commandWord.equals("back")) {
-            back();
 
+
+        if (canMove == true){
+            if (commandWord.equals("go")){
+                goRoom(command);
+                return false;
+            }
+            switch (commandWord){
+                //case "go"-> goRoom(command);
+                case "quit" -> wantToQuit = quit(command);
+                case "help" -> printHelp();
+                case "back" -> back();
+
+                case "hack" -> hack(command);
+                case "check" -> check();
+                case "take" -> take(command);
+                case "drop"-> drop(command);
+            }
         }
+
+
         // else command not recognised.
         return wantToQuit;
     }
@@ -235,6 +251,7 @@ public class Game
     }
 
     public void processDecision(Command command){
+
         if (command.getCommandWord().equals("fight")){
             int hplost = currentRoom.fight(fightLv);
             hp = hp - hplost;
@@ -307,6 +324,81 @@ public class Game
                 }
             }
         }
+    }
+
+    public void hack(Command command){
+        if (command.getSecondWord().equals("player")){
+            switch(command.getThirdWord()){
+                case "health" -> hp=999999999;
+                case "attack" -> fightLv = 100;
+                case "stealth" -> stealthLv = 100;
+                default -> System.out.println("You can not do that.");
+            }
+        }
+        else if (command.getSecondWord().equals("monster")){
+            if (command.getThirdWord().equals("clear")){
+                currentRoom.monExit();
+            }
+            else {
+                System.out.println("You can not do that.");
+            }
+        }
+        else{
+            System.out.println("What???????");
+        }
+    }
+
+    public void check(){
+        ArrayList<String> chest = currentRoom.getChest();
+        System.out.println("You found following items in the room");
+        for (String i : chest){
+            System.out.println(i);
+        }
+    }
+
+    public void take(Command command){
+        ArrayList<String> chest = currentRoom.getChest();
+        String item = command.getSecondWord();
+        if (item == null){
+            System.out.println("You have just picked up the void from the room");
+            System.out.println("You just realised what mistake you have made.ut all you can see is nothing as you ");
+            System.out.println("But its already too late");
+            System.out.println("You can not see anything");
+            System.out.println("You can not hear anything");
+            System.out.println("You are trapped by the void");
+            hp = -1;
+
+        }
+        else if(chest.contains(item)){
+            currentRoom.removeItem(item);
+            inventory.add(item);
+            while (itemList.totalMass(inventory)>weightLimit){
+                System.out.println("Your inventory is too heavy");
+                System.out.println("You know you can not travel like this anymore");
+                System.out.println("Your decides to drop something");
+                canMove = false;
+                processCommand(parser.getCommand());
+            }
+        }
+        else{
+            System.out.println("That item does not exist in the room");
+        }
+    }
+
+    public void drop(Command command){
+        String item = command.getSecondWord();
+        if (!itemList.checkItem(item)){
+            System.out.println("That it not a real item");
+        }
+        else if (!inventory.contains(item)){
+            System.out.println("You do not have a" + item);
+
+        }
+        else {
+            currentRoom.setItem(item);
+            inventory.remove(item);
+        }
+
     }
 
 }

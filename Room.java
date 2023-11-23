@@ -101,13 +101,19 @@ public class Room
      * To initialize item in rooms
      * @param name of the added item
      */
-    public void setItem(String name){
-        chest.add(name);
+    public void setItem(String name){chest.add(name);}
+
+    /**
+     * To remove chosen item from room
+     * @param name of item
+     */
+    public void removeItem(String name){chest.remove(name);}
+
+    public ArrayList<String> getChest() {
+        return chest;
     }
 
-
-
-    public void addMonster(String name,int attack,float sense){
+    public void addMonster(String name, int attack, float sense){
         mons = new Monster(name,attack,sense);
     }
 
@@ -115,7 +121,7 @@ public class Room
         if (mons == null){
             return "-1";
         }
-        else{return mons.getName();}
+        else return mons.getName();
     }
     public void monEnter(Monster monst){
         mons = monst;
@@ -146,6 +152,7 @@ public class Room
     public int monsAttack(){
         return mons.getAttack();
     }
+
 
 }
 
