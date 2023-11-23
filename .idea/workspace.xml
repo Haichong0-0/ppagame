@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="34f5f718-46aa-4b51-9d6d-9d520b0aa826" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="34f5f718-46aa-4b51-9d6d-9d520b0aa826" name="Changes" comment="write up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assignment2.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandWords.java" beforeDir="false" afterPath="$PROJECT_DIR$/CommandWords.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ItemList.java" beforeDir="false" afterPath="$PROJECT_DIR$/ItemList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Room.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ppagame.docx" beforeDir="false" afterPath="$PROJECT_DIR$/ppagame.docx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +21,11 @@
   <component name="Git.Settings">
     <branch-grouping />
     <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
@@ -50,29 +59,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "jdk.selected.JAVA_MODULE": "openjdk-21",
-    "last_opened_file_path": "C:/Users/shang/Documents/CS1/PPA/assignment2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.editor",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;openjdk-21&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/shang/Documents/CS1/PPA/test&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\shang\Documents\CS1\PPA\assignment2\src" />
@@ -82,21 +90,6 @@
       <recent name="C:\Users\shang\Documents\CS1\PPA\assignment2\root" />
       <recent name="C:\Users\shang\Documents\CS1\PPA\assignment2\" />
     </key>
-  </component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="assignment2" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="assignment2" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -117,7 +110,11 @@
       <workItem from="1700409499051" duration="16000" />
       <workItem from="1700409529815" duration="8767000" />
       <workItem from="1700490093805" duration="44000" />
-      <workItem from="1700598285806" duration="54000" />
+      <workItem from="1700598285806" duration="18726000" />
+      <workItem from="1700737545481" duration="73000" />
+      <workItem from="1700738263837" duration="34000" />
+      <workItem from="1700740161366" duration="49000" />
+      <workItem from="1700741777674" duration="2160000" />
     </task>
     <task id="LOCAL-00001" summary="all">
       <option name="closed" value="true" />
@@ -151,7 +148,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700490135789</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="write up">
+      <option name="closed" value="true" />
+      <created>1700598357441</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1700598357441</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,7 +167,13 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -171,6 +182,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="all" />
     <MESSAGE value="write uo" />
-    <option name="LAST_COMMIT_MESSAGE" value="write uo" />
+    <MESSAGE value="write up" />
+    <option name="LAST_COMMIT_MESSAGE" value="write up" />
   </component>
 </project>

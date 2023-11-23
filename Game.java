@@ -1,4 +1,4 @@
-import java.util.Objects;
+import java.util.*;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -22,6 +22,8 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private int hp,fightLv,stealthLv;
+    private ArrayList<String>  bacDirec;
+    private ArrayList<String> playerbag;
         
     /**
      * Create the game and initialise its internal map.
@@ -38,7 +40,7 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, rest, wind, water1, water2,earth1,earth2,earth3,fire1;
+        Room outside, rest, wind, water1, water2,earth1,earth2,earth3,fire1,tproom,fire2;
       
         // create the rooms
         outside = new Room("outside the main entrance of the dungeon."+"\n"+"A large fallen tree in a murky morass marks the entrance.");
@@ -50,6 +52,8 @@ public class Game
         earth2 = new Room("");
         earth3 = new Room("");
         fire1 = new Room("");
+        fire2 = new Room("");
+        tproom = new Room("in a magical room. Everything here feels unreal.");
 
         
         // initialise room exits
@@ -68,20 +72,23 @@ public class Game
 
         water2.setExit("south",water1);
 
-        earth1.setExit("north",fire1);
+
         earth1.setExit("west",rest);
         earth1.setExit("east",earth2);
+        earth1.setExit("north",tproom);
 
+        tproom.setExit("south",earth1);
+
+        earth2.setExit("north",fire1);
         earth2.setExit("west",earth1);
         earth2.setExit("east",earth3);
 
         earth3.setExit("west",earth2);
 
         fire1.setExit("south",earth1);
+        fire1.setExit("north",fire2);
 
-
-
-
+        fire2.setExit("south",fire1);
 
 
         currentRoom = outside;  // start game outside
@@ -101,6 +108,11 @@ public class Game
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
+            if (currentRoom.getShortDescription().equals("in a magical room. Everything here feels unreal.")){
+                System.out.println("description of magic");
+                tpRoom();
+            }
+            monsterT();
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -142,7 +154,8 @@ public class Game
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
-        else if (commandWord.equals("fight")) {
+        else if (commandWord.equals("back")) {
+            back();
 
         }
         // else command not recognised.
@@ -178,7 +191,6 @@ public class Game
         }
 
         String direction = command.getSecondWord();
-
         // Try to leave current room.
         Room nextRoom = currentRoom.getExit(direction);
 
@@ -187,6 +199,12 @@ public class Game
         }
         else {
             currentRoom = nextRoom;
+            switch (direction) { //tell back command the directions
+                case "north" -> bacDirec.add("south");
+                case "south" -> bacDirec.add("north");
+                case "east" -> bacDirec.add("west");
+                case "west" -> bacDirec.add("east");
+            }
             if (Objects.equals(nextRoom.getMons(), "-1")){ //if there is no monster
                 System.out.println(currentRoom.getLongDescription());
             }
@@ -253,4 +271,42 @@ public class Game
             processDecision(decision); //until the player enters a valid response
         }
     }
+
+    public void back(){
+        String direction = bacDirec.get(bacDirec.size()-1);
+        currentRoom = currentRoom.getExit(direction);
+        bacDirec.remove(bacDirec.size()-1);
+    }
+    //tp the player to a random room he has been in
+    public void tpRoom(){
+        int upper = bacDirec.size();
+        Random rand = new Random();
+        int repeat = rand.nextInt(upper)+1;
+        for( int i = 0; i<=repeat;i++){
+            back();
+        }
+    }
+
+    public void monsterT(){
+        //this function traverses though all rooms
+        Queue<Room> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        queue.add(currentRoom);
+        visited.add(currentRoom.getShortDescription());
+        while(!queue.isEmpty()){
+
+            Room current = queue.remove();
+            //function
+
+            for (Object n: current.getExit().values()){
+                Room r = (Room) n;
+                if (!visited.contains(r.getShortDescription())){
+                    queue.add(r);
+                    visited.add(r.getShortDescription());
+                }
+            }
+        }
+    }
+
 }

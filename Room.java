@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashMap;
 
@@ -19,7 +20,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private Chest chest;
+    private ArrayList<String> chest;
     private Monster mons;
     private double damageMod =2.5;
 
@@ -33,7 +34,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
-        chest = new Chest();
+        chest = new ArrayList<>();
         mons = null;
 
     }
@@ -47,6 +48,8 @@ public class Room
     {
         exits.put(direction, neighbor);
     }
+
+    public HashMap getExit(){return exits;}
 
     /**
      * @return The short description of the room
@@ -97,11 +100,9 @@ public class Room
     /**
      * To initialize item in rooms
      * @param name of the added item
-     * @param mass of the added item
      */
-    public void addItem(String name,int mass){
-        Item temp = new Item(name,mass);
-        chest.store(temp);
+    public void setItem(String name){
+        chest.add(name);
     }
 
 
