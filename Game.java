@@ -21,12 +21,12 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
-    private int hp,fightLv,stealthLv;
     private ArrayList<String>  bacDirec;
     private ArrayList<String> inventory;
     private ItemList itemList;
     private int weightLimit;
     private boolean canMove;
+    private Player player;
         
     /**
      * Create the game and initialise its internal map.
@@ -35,12 +35,13 @@ public class Game
     {
         createRooms();
         parser = new Parser();
-        stealthLv = 5;
+
         inventory = new ArrayList<>();
         bacDirec = new ArrayList<>();
         itemList = new ItemList();
         weightLimit = 50;
         canMove = true;
+        player= new Player();
     }
 
     /**
@@ -60,7 +61,7 @@ public class Game
         earth2 = new Room("");
         earth3 = new Room("");
         fire1 = new Room("");
-        fire2 = new Room("");
+        fire2 = new Room("temp");
         tproom = new Room("in a magical room. Everything here feels unreal.");
 
         
@@ -121,6 +122,12 @@ public class Game
                 tpRoom();
             }
             monsterT();
+            if (player.getHp()<=0){
+                finished = true;
+            }
+            if(currentRoom.getShortDescription().equals("temp")){
+                finished = endroom();
+            }
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -135,7 +142,46 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
+        System.out.println("Pick your class from below:");
+        System.out.println("Fighter ");
+        System.out.println("The rogue");
+        System.out.println("Barbarian");
+        pickclass();
         System.out.println(currentRoom.getLongDescription());
+    }
+
+    public void  pickclass(){
+        boolean finished = false;
+        while (!finished){
+            System.out.println("Please enter in the format of: class calssChosen");
+            System.out.println("E.g class fighter");
+            Command command = parser.getCommand();
+            if (command.getCommandWord().equals("class")) {
+                switch (command.getSecondWord()) {
+                    case "fighter":
+                        player.setHp(150);
+                        player.setFightLv(10);
+                        player.setStealthLv(3);
+                        finished = true;
+                        break;
+                    case "rogue":
+                        player.setHp(75);
+                        player.setFightLv(3);
+                        player.setStealthLv(8);
+                        finished = true;
+                        break;
+                    case "Barbarian":
+                        player.setHp(100);
+                        player.setFightLv(6);
+                        player.setStealthLv(5);
+                        finished = true;
+                        break;
+                    default:
+                        System.out.println("that is not a available class");
+                }
+            }
+
+        }
     }
 
     /**
@@ -155,22 +201,23 @@ public class Game
         String commandWord = command.getCommandWord();
 
 
-        if (canMove == true){
+        if (canMove){
             if (commandWord.equals("go")){
                 goRoom(command);
                 return false;
             }
-            switch (commandWord){
-                //case "go"-> goRoom(command);
-                case "quit" -> wantToQuit = quit(command);
-                case "help" -> printHelp();
-                case "back" -> back();
+        }
+        switch (commandWord){
+            //case "go"-> goRoom(command);
+            case "quit" -> wantToQuit = quit(command);
+            case "help" -> printHelp();
+            case "back" -> back();
 
-                case "hack" -> hack(command);
-                case "check" -> check();
-                case "take" -> take(command);
-                case "drop"-> drop(command);
-            }
+            case "hack" -> hack(command);
+            case "check" -> check();
+            case "take" -> take(command);
+            case "drop"-> drop(command);
+            case "use" -> use(command);
         }
 
 
@@ -251,10 +298,10 @@ public class Game
     }
 
     public void processDecision(Command command){
-
+        int hp = player.getHp();
         if (command.getCommandWord().equals("fight")){
-            int hplost = currentRoom.fight(fightLv);
-            hp = hp - hplost;
+            int hplost = currentRoom.fight(player.getFightLv());
+             hp = hp - hplost;
             if (hp>0) {
                 System.out.println("You won the fight. You have lost " + hplost + " HP.");
                 System.out.println("Your current HP is " + hp);
@@ -262,7 +309,7 @@ public class Game
         }
 
         else if (command.getCommandWord().equals("sneak")) {
-            if (currentRoom.stealthCheck(stealthLv)){
+            if (currentRoom.stealthCheck(player.getStealthLv())){
                 System.out.println("You have successfully sneak passed the monster");
             }
 
@@ -287,6 +334,7 @@ public class Game
             Command decision = parser.getCommand();
             processDecision(decision); //until the player enters a valid response
         }
+        player.setHp(hp);
     }
 
     public void back(){
@@ -329,9 +377,9 @@ public class Game
     public void hack(Command command){
         if (command.getSecondWord().equals("player")){
             switch(command.getThirdWord()){
-                case "health" -> hp=999999999;
-                case "attack" -> fightLv = 100;
-                case "stealth" -> stealthLv = 100;
+                case "health" -> player.setHp(99999999);
+                case "attack" -> player.setFightLv(100);
+                case "stealth" -> player.setStealthLv(100);
                 default -> System.out.println("You can not do that.");
             }
         }
@@ -366,7 +414,7 @@ public class Game
             System.out.println("You can not see anything");
             System.out.println("You can not hear anything");
             System.out.println("You are trapped by the void");
-            hp = -1;
+            player.setHp(-1);
 
         }
         else if(chest.contains(item)){
@@ -399,6 +447,35 @@ public class Game
             inventory.remove(item);
         }
 
+    }
+    public void use(Command command){
+        String item = command.getSecondWord();
+        if (item == null){
+            System.out.println("waht is it that you wants to use?");
+        }
+        else {
+            if (inventory.contains(item) && itemList.checkItem(item)) {
+                switch (item ){
+                    case "HealingPotion" -> player.setHp(player.getHp()+50);
+                    case "InvisibleSpell" -> player.setStealthLv(99);
+                }
+            }
+        }
+    }
+
+    public boolean endroom(){
+        String[] rocks = {"Windrock","Earthrock","Waterrock"};
+        int count = 0;
+        for (String i:rocks){
+            if (inventory.contains(i)){
+                count +=1;
+            }
+        }
+        if (count ==3){
+            //finishing words
+            return true;
+        }
+        return false;
     }
 
 }
