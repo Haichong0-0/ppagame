@@ -42,7 +42,7 @@ public class Parser
 
         System.out.print("> ");     // print prompt
 
-        inputLine = reader.nextLine();
+        inputLine = reader.nextLine().toLowerCase();
 
         // Find up to two words on the line.
         Scanner tokenizer = new Scanner(inputLine);

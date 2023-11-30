@@ -127,8 +127,14 @@ public class Room
         mons = monst;
     }
 
-    public void monExit(){
+    public Monster monExit(){
+        Monster temp =  mons;
         mons = null;
+        return  mons;
+    }
+
+    public int monsAttack(){
+        return mons.getAttack();
     }
 
     public int fight(int pstat){
@@ -149,9 +155,7 @@ public class Room
         return temp > Math.random();
     }
 
-    public int monsAttack(){
-        return mons.getAttack();
-    }
+
 
 
 }

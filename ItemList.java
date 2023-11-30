@@ -9,6 +9,7 @@ public class ItemList {
         items.put("Waterrock",5);
         items.put("InvisibleSpell",5);
         items.put("HealingPotion",5);
+        items.put("adrenaline",3);
 
 
     }
@@ -24,6 +25,17 @@ public class ItemList {
         }
         return weight;
     }
+    public void healingpotion(Player player){
+        player.setHp(player.getHp()+50);
+    }
+    public void invisiableSpell(Player player){
+        player.stealthBoost(2);
+    }
+
+    public void adrenaline(Player player){
+        player.strengthBoost(2);
+    }
+
 
 
 

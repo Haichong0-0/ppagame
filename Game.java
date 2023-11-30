@@ -8,7 +8,7 @@ import java.util.*;
  * 
  *  To play this game, create an instance of this class and call the "play"
  *  method.
- * 
+ game =*
  *  This main class creates and initialises all the others: it creates all
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
@@ -22,7 +22,6 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private ArrayList<String>  bacDirec;
-    private ArrayList<String> inventory;
     private ItemList itemList;
     private int weightLimit;
     private boolean canMove;
@@ -35,13 +34,11 @@ public class Game
     {
         createRooms();
         parser = new Parser();
-
-        inventory = new ArrayList<>();
         bacDirec = new ArrayList<>();
         itemList = new ItemList();
         weightLimit = 50;
         canMove = true;
-        player= new Player();
+
     }
 
     /**
@@ -159,21 +156,15 @@ public class Game
             if (command.getCommandWord().equals("class")) {
                 switch (command.getSecondWord()) {
                     case "fighter":
-                        player.setHp(150);
-                        player.setFightLv(10);
-                        player.setStealthLv(3);
+                        player = new Player(150,10,3);
                         finished = true;
                         break;
                     case "rogue":
-                        player.setHp(75);
-                        player.setFightLv(3);
-                        player.setStealthLv(8);
+                        player = new Player(75,3,8);
                         finished = true;
                         break;
                     case "Barbarian":
-                        player.setHp(100);
-                        player.setFightLv(6);
-                        player.setStealthLv(5);
+                        player = new Player(100,6,5);
                         finished = true;
                         break;
                     default:
@@ -202,17 +193,20 @@ public class Game
 
 
         if (canMove){
-            if (commandWord.equals("go")){
-                goRoom(command);
-                return false;
+            switch(commandWord){
+                case "go":
+                    goRoom(command);
+                    return false;
+                case "back":
+                    back();
+                    return false;
             }
         }
         switch (commandWord){
             //case "go"-> goRoom(command);
             case "quit" -> wantToQuit = quit(command);
             case "help" -> printHelp();
-            case "back" -> back();
-
+            case "back" -> System.out.println("You can not move anywhere until u drop something");
             case "hack" -> hack(command);
             case "check" -> check();
             case "take" -> take(command);
@@ -300,7 +294,7 @@ public class Game
     public void processDecision(Command command){
         int hp = player.getHp();
         if (command.getCommandWord().equals("fight")){
-            int hplost = currentRoom.fight(player.getFightLv());
+            int hplost = currentRoom.fight(player.getStrengthLv());
              hp = hp - hplost;
             if (hp>0) {
                 System.out.println("You won the fight. You have lost " + hplost + " HP.");
@@ -356,12 +350,20 @@ public class Game
         //this function traverses though all rooms
         Queue<Room> queue = new LinkedList<>();
         Set<String> visited = new HashSet<>();
+        Monster monster = null;
 
         queue.add(currentRoom);
         visited.add(currentRoom.getShortDescription());
         while(!queue.isEmpty()){
 
             Room current = queue.remove();
+            if (monster != null){
+
+            }
+            if (!current.getMons().equals("-1")){
+                monster = current.monExit();
+            }
+
             //function
 
             for (Object n: current.getExit().values()){
@@ -378,7 +380,7 @@ public class Game
         if (command.getSecondWord().equals("player")){
             switch(command.getThirdWord()){
                 case "health" -> player.setHp(99999999);
-                case "attack" -> player.setFightLv(100);
+                case "attack" -> player.setStrengthLv(100);
                 case "stealth" -> player.setStealthLv(100);
                 default -> System.out.println("You can not do that.");
             }
@@ -419,11 +421,11 @@ public class Game
         }
         else if(chest.contains(item)){
             currentRoom.removeItem(item);
-            inventory.add(item);
-            while (itemList.totalMass(inventory)>weightLimit){
+            player.getInventory().add(item);
+            while (itemList.totalMass(player.getInventory())>weightLimit){
                 System.out.println("Your inventory is too heavy");
                 System.out.println("You know you can not travel like this anymore");
-                System.out.println("Your decides to drop something");
+                System.out.println("You decides to drop something");
                 canMove = false;
                 processCommand(parser.getCommand());
             }
@@ -438,13 +440,13 @@ public class Game
         if (!itemList.checkItem(item)){
             System.out.println("That it not a real item");
         }
-        else if (!inventory.contains(item)){
+        else if (!player.getInventory().contains(item)){
             System.out.println("You do not have a" + item);
 
         }
         else {
             currentRoom.setItem(item);
-            inventory.remove(item);
+            player.getInventory().remove(item);
         }
 
     }
@@ -454,10 +456,10 @@ public class Game
             System.out.println("waht is it that you wants to use?");
         }
         else {
-            if (inventory.contains(item) && itemList.checkItem(item)) {
+            if (player.getInventory().contains(item) && itemList.checkItem(item)) {
                 switch (item ){
-                    case "HealingPotion" -> player.setHp(player.getHp()+50);
-                    case "InvisibleSpell" -> player.setStealthLv(99);
+                    case "HealingPotion" -> itemList.healingpotion(player);
+                    case "InvisibleSpell" ->itemList.invisiableSpell(player);
                 }
             }
         }
@@ -467,7 +469,7 @@ public class Game
         String[] rocks = {"Windrock","Earthrock","Waterrock"};
         int count = 0;
         for (String i:rocks){
-            if (inventory.contains(i)){
+            if (player.getInventory().contains(i)){
                 count +=1;
             }
         }
